@@ -1,5 +1,7 @@
 import json
 
+#Carga de archivos.
+
 #Se hace la lectura del archivo donde se encuentran los usuarios con vehiculo registrado.
 Load = open("usuarios.json", "r", encoding="utf-8")
 usuarios = json.load(Load)
@@ -24,6 +26,20 @@ parqueadero2 = tiposParqueaderos
 n = 0
 par = list(parqueadero1.keys())
 dude = 0
+
+#Apartado de funciones.
+
+#Función la cual me permite digite una opción del menú
+def op():
+    n = 0
+    while n == 0:
+        try:
+            opc = int(input("1. Ingreso de vehiculo\n2. Registro de vehiculo\n3. Retirar vehiculo\n4. Salir\nPor favor digite la opción que desea utilizar: "))
+            n = 1
+        except:
+            print("Por favor digite una opción adecuada.")
+            n = 0
+    return opc
 
 #Función que me permite registrar nuevos usuarios
 def regV(usuarios, user, nom, id):
@@ -78,22 +94,28 @@ def parQ(parqueadero1, parqueadero, n1, n2):
             else:
                 print(" X ", end="")
         print("\n")
-    col = int(input("Por favor ingrese el numero de la columna a parquear: "))
-    fil = int(input("Por favor ingrese el numero de la fila a parquear: "))
-    col = col - 1
-    fil = fil - 1
-    if(parqueadero[fil][col] == n1 or parqueadero[fil][col] == n2):
-        parqueadero[fil][col] = placa
-        parqueadero1[piso] = parqueadero
-        with open("ocupacionParqueaderos.json", "w", encoding= "utf-8") as file:
-            json.dump(parqueadero1, file, indent=1, ensure_ascii = False)
-        print("¡El vehiculo se parqueado correctamente!")
-    else:
-        print("Este lugar se encuentra ocupado o no disponible, por favor vuelva a intentarlo.")
+    carr = 0
+    while carr == 0:
+        col = int(input("Por favor ingrese el numero de la columna a parquear: "))
+        fil = int(input("Por favor ingrese el numero de la fila a parquear: "))
+        col = col - 1
+        fil = fil - 1
+        #Condición para evaluar y parquear el vehiculo dentro de ocupacionParqueaderos.
+        if(parqueadero[fil][col] == n1 or parqueadero[fil][col] == n2):
+            parqueadero[fil][col] = placa
+            parqueadero1[piso] = parqueadero
+            with open("ocupacionParqueaderos.json", "w", encoding= "utf-8") as file:
+                json.dump(parqueadero1, file, indent=1, ensure_ascii = False)
+            print("¡El vehiculo se parqueado correctamente!")
+            carr = 1
+        else:
+            print("Este lugar se encuentra ocupado o no disponible, por favor vuelva a intentarlo.")
     return parqueadero1
 
+
+#Proceso para el desarrollo del parqueadero.
 #Menú de opciones para el parqueardero.
-opc = int(input("1. Ingreso de vehiculo\n2. Registro de vehiculo\n3. Retirar vehiculo\n4. Salir\nPor favor digite la opción que desea utilizar: "))
+opc = op()
 while(opc != 4):
     #Opción para el ingreso de vehiculos
     if(opc == 1):
@@ -208,8 +230,10 @@ while(opc != 4):
         with open("ocupacionParqueaderos.json", "w", encoding = "utf-8") as file:
             json.dump(parqueadero1, file, indent=1, ensure_ascii = False)
 
-    opc = int(input("1. Ingreso de vehiculo\n2. Registro de usuario\n3. Retirar vehiculo\n4. Salir\nPor favor digite la opción que desea utilizar: "))
+    opc = op()
 print("El programa a finalizado correctamente.")
+
+#Procedimiento para generar el archivo final y el reporte
 placaspar = []
 #Aquí generamos el reporte final de ocupación, tipos de usuarios, etc...
 og = 0
